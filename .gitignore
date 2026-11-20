@@ -1,0 +1,72 @@
+# Build output
+_build/
+out/
+build/
+dist/
+
+# MPLAB generated build files
+cmake/*/default.production/
+.generated/
+
+# MPLAB X IDE (old style) generated files
+nbproject/private/
+nbproject/Makefile-*.mk
+nbproject/Package-*.bash
+nbproject/Makefile-impl.mk
+nbproject/Makefile-variables.mk
+debug/
+dist/
+build/
+disassembly/
+
+# Compiler / linker outputs
+*.p1
+*.pre
+*.o
+*.obj
+*.d
+*.i
+*.sdb
+*.sym
+*.lst
+*.map
+*.rlf
+*.cmf
+*.cof
+*.elf
+*.hxl
+*.mum
+*.as
+*.obj
+
+# Programmer / debugger files
+*.hex
+*.production.hex
+*.production.elf
+*.debug.elf
+
+# VS Code local settings
+.vscode/
+!.vscode/black_box.mplab.json
+!.vscode/tasks.json
+!.vscode/launch.json
+.history/
+
+# OS files
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Editor backups
+*~
+*.bak
+*.tmp
+*.swp
+.generated_files/
+nbproject/
+Makefile*
+Package-*
+private/
+!cmake/**/user.cmake
+cmake/**/.generated/*
+cmake/**/CMake*
