@@ -1,7 +1,7 @@
 #ifndef CLCD_H
 #define	CLCD_H
 
-#define _XTAL_FREQ                  20000000 // 20Mhz
+#define _XTAL_FREQ                  20000000
 
 #define CLCD_DATA_PORT_DDR          TRISD
 #define CLCD_RS_DDR                 TRISE2
