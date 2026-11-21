@@ -2,7 +2,7 @@
 #include <string.h>
 #include "main.h"
 
-/* Shared application data. Keep definitions in this one source file. */
+// /* Shared application data. Keep definitions in this one source file. */ DONE
 unsigned char clock_reg[3];
 char time[7];
 char log[11];

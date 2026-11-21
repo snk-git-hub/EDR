@@ -24,5 +24,5 @@
 unsigned char read_digital_keypad(unsigned char mode);
 void init_digital_keypad(void);
 
-#endif	/* DIGITAL_KEYPAD_H */
+#endif	
 
