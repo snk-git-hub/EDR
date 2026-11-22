@@ -10,5 +10,5 @@ void i2c_stop(void);
 unsigned char i2c_read(unsigned char ack);
 int i2c_write(unsigned char data);
 
-#endif	/* I2C_H */
+#endif	
 

@@ -1,15 +1,20 @@
-#include <xc.h>
 #include "main.h"
+#include <xc.h>
 
-/* Shared with the password/login implementation. */
-unsigned char sec, return_time;
+extern volatile unsigned char sec;
+extern volatile unsigned char return_time;
 
-void __interrupt() isr(void)
-{
-    static unsigned int count = 0;
-
-    /* TODO 1: Check whether the Timer2 interrupt flag is set. */
-    /* TODO 2: Count timer interrupts to produce a one-second interval. */
-    /* TODO 3: Decrement sec or return_time at the correct time. */
-    /* TODO 4: Clear the Timer2 interrupt flag before leaving the ISR. */
+void __interrupt() isr(void) {
+  static unsigned int count = 0;
+  if (TMR2IF == 1) {
+    if (++count == 1250) {
+      count = 0;
+      if (sec > 0) {
+        sec--;
+      } else if (return_time > 0) {
+        return_time--;
+      }
+    }
+    TMR2IF = 0;
+  }
 }

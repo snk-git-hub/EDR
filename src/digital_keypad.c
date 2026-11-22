@@ -12,14 +12,12 @@ unsigned char read_digital_keypad(unsigned char mode) {
 
   if (mode == LEVEL_DETECTION) {
     return key;
-  }
-  else{
-    if(key != INPUT_LINES&&once){
-        once=0;
-        return key;
-    }
-    else if(key == INPUT_LINES){
-        once =1;
+  } else {
+    if (key != INPUT_LINES && once) {
+      once = 0;
+      return key;
+    } else if (key == INPUT_LINES) {
+      once = 1;
     }
   }
   return INPUT_LINES;

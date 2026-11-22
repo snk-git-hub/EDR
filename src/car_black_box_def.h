@@ -8,5 +8,7 @@ char login_menu(unsigned char key,unsigned char reset_flag);
 void view_log(unsigned char key,unsigned char reset_flag);
 char clear_log(unsigned char reset_flag);
 char change_password(unsigned char key,unsigned char reset_flag);
+void write_internal_eeprom(unsigned char address, unsigned char data);
+unsigned char read_internal_eeprom(unsigned char address);
 
 #endif
