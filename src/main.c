@@ -6,6 +6,9 @@
 
 char *gear[] = {"GN", "GR", "G1", "G2", "G3", "G4"};
 
+unsigned char gear_index = 1;
+unsigned char menu_index = 0;
+
 static void init_config(void) {
   init_clcd();
   init_digital_keypad();
@@ -28,8 +31,12 @@ void log_power_on_event(void) {
   write_internal_eeprom(0x01, min);
 
   write_internal_eeprom(0x02, hour);
+
+  write_internal_eeprom(0x03, ON);
 }
+
 void display_event_log(void) {
+
   unsigned char sec, min, hour, event;
 
   sec = read_internal_eeprom(0x00);
@@ -49,8 +56,11 @@ void main(void) {
   char event[3] = "ON";
   unsigned char speed = 0;
   unsigned char control_flag = DASH_BOARD_FLAG;
-  unsigned char key, reset_flag, menu_pos;
-  unsigned char gr = 0;
+  unsigned char key;
+  unsigned char reset_flag = RESET_NOTHING;
+
+  unsigned short adc_valu;
+  unsigned char return_flag;
 
   init_config();
 
@@ -61,51 +71,88 @@ void main(void) {
     unsigned short adc_value;
     unsigned char key;
 
-    /* TODO 5: Read ADC and convert the result to a speed from 0 to 99. */
-
     adc_value = read_adc(CHANNEL5);
 
-    /* TODO 6: Read keypad input using state detection. */
     key = read_digital_keypad(STATE_DETECTION);
 
-    /* TODO 7: Handle SW1 (collision), SW2 (next gear), SW3 (previous gear). */
-     
-
-    /* TODO 8: From dashboard, SW4/SW5 should enter password login. */
-    /* TODO 9: From login menu, SW6 should select the highlighted operation. */
-
-    /* Keep the application as a state machine. Implement each state in
-       the switch below and preserve the reset_flag behavior. */
     switch (control_flag) {
     case DASH_BOARD_FLAG:
-      /* TODO 10: Display current time, event and speed. */
+      display_dash_board(event, speed);
+      if (key == SW1) {
+        log_car_event("CO", speed);
+
+      } else if (key == SW2) {
+        if (gear_index < 5) {
+          gear_index++;
+        }
+      } else if (key == SW3) {
+        if (gear_index > 1) {
+          gear_index--;
+        }
+      } else if (key == SW4 || key == SW5) {
+        control_flag = LOGIN_FLAG;
+        reset_flag = RESET_PASSWORD;
+      }
       break;
 
     case LOGIN_FLAG:
-      /* TODO 11: Call login(); handle RETURN_BACK and TASK_SUCCESS. */
+      reset_flag = login(key, reset_flag);
+      if (return_flag == TASK_SUCCESS) {
+        control_flag = LOGIN_MENU_FLAG;
+        reset_flag = RESET_PASSWORD;
+      } else if (return_flag == RETURN_BACK) {
+        control_flag = DASH_BOARD_FLAG;
+        reset_flag = RESET_NOTHING;
+      }
       break;
 
     case LOGIN_MENU_FLAG:
-      /* TODO 12: Call login_menu() and retain the selected menu item. */
-      break;
+      return_flag = login_menu(key, reset_flag);
+
+      if (return_flag == RETURN_BACK) {
+        control_flag = DASH_BOARD_FLAG;
+        reset_flag = RESET_NOTHING;
+      } else if (return_flag == VIEW_LOG_FLAG ||
+                 return_flag == CLEAR_LOG_FLAG ||
+                 return_flag == CHANGE_PASSWORD_FLAG) {
+        control_flag = return_flag;
+        reset_flag = RESET_PASSWORD;
+      }
+       break;
 
     case VIEW_LOG_FLAG:
-      /* TODO 13: Call view_log() and handle navigation/back key. */
+      view_log(key, reset_flag);
       break;
 
     case CLEAR_LOG_FLAG:
-      /* TODO 14: Call clear_log(); return to login menu on completion. */
+      return_flag = clear_log(reset_flag);
+
+      if (return_flag == TASK_SUCCESS) {
+        control_flag = LOGIN_MENU_FLAG;
+        reset_flag = RESET_PASSWORD;
+      }
+
       break;
 
     case CHANGE_PASSWORD_FLAG:
-      /* TODO 15: Call change_password(); handle completion/failure. */
+      return_flag = change_password(key, reset_flag);
+
+      if (return_flag == TASK_SUCCESS) {
+        control_flag = LOGIN_MENU_FLAG;
+        reset_flag = RESET_PASSWORD;
+      } else if (return_flag == RETURN_BACK) {
+        control_flag = LOGIN_MENU_FLAG;
+        reset_flag = RESET_NOTHING;
+      }
+
       break;
 
     default:
-      /* TODO 16: Recover safely from an invalid application state. */
+      control_flag = DASH_BOARD_FLAG;
+      reset_flag = RESET_NOTHING;
       break;
     }
 
-    /* TODO 17: Restore RESET_NOTHING after one-time state initialization. */
+    reset_flag = RESET_NOTHING;
   }
 }
