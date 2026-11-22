@@ -1,7 +1,7 @@
 #ifndef I2C_H
 #define	I2C_H
 
-#define FOSC            20000000
+#define I2C_FOSC        20000000UL   /* was FOSC: clashes with #pragma config FOSC */
 
 void init_i2c(unsigned long baud);
 void i2c_start(void);

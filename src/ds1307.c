@@ -5,7 +5,10 @@
 void init_ds1307(void) {
   unsigned char sec;
   sec = read_ds1307(SEC_ADDR);
-  write_ds1307(SEC_ADDR, sec & 0x7F);
+  write_ds1307(SEC_ADDR, sec & 0x7F);       /* clear clock-halt bit */
+
+  /* force 24-hour mode (bit 6 = 0) - the time code masks with 0x3F */
+  write_ds1307(HOUR_ADDR, read_ds1307(HOUR_ADDR) & 0x3F);
 }
 
 unsigned char read_ds1307(unsigned char addr) {

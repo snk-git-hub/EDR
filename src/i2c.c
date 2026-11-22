@@ -6,7 +6,7 @@ void init_i2c(unsigned long baud) {
   TRISC4 = 1;
 
   SSPCON = 0x28;
-  SSPADD = 49;
+  SSPADD = (unsigned char)((I2C_FOSC / (4UL * baud)) - 1);   /* 100 kHz -> 49 */
   SSPSTAT = 0x80;
 }
 

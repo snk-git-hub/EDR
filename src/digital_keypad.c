@@ -2,8 +2,8 @@
 #include <xc.h>
 
 void init_digital_keypad(void) {
-  KEYPAD_PORT = 1;
-  KEYPAD_PORT_DDR = 1;
+  KEYPAD_PORT_DDR |= INPUT_LINES;   /* RB0..RB5 must be inputs (was TRISB = 1) */
+  OPTION_REG &= 0x7F;               /* nRBPU = 0: weak pull-ups on PORTB */
 }
 
 unsigned char read_digital_keypad(unsigned char mode) {
