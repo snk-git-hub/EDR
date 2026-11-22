@@ -56,7 +56,7 @@ void main(void) {
   load_log_state();                      /* restore log count/index from EEPROM */
 
   while (1) {
-    adc_value = read_adc(CHANNEL5);
+    adc_value = read_adc(CHANNEL0);
     if (adc_value / 10 > 99) {
       speed = 99;
     } else {
